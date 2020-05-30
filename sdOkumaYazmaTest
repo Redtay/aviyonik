@@ -1,0 +1,75 @@
+#include <SPI.h>
+#include <SD.h>
+#include <Adafruit_BMP280.h>
+
+
+File dosya;
+Adafruit_BMP280 BMPSensor; 
+
+float ilkBasinc = 0; 
+const int chipSelect = 53; 
+String veri = "";
+bool yazirmaYapildi = false;
+
+void setup() 
+{
+  Serial.begin(9600);
+
+  if (!BMPSensor.begin())
+  {
+    Serial.println(F("Could not find a valid BMP280 sensor, check wiring!"));
+   	while (1);
+  }
+
+  if (!SD.begin(chipSelect)) 
+  {
+    Serial.println("SD kart baglantisi basarisiz!");
+    while(1); 
+  }
+
+   BMPSensor.setSampling(Adafruit_BMP280::MODE_NORMAL,     /* Operating Mode. */
+                  Adafruit_BMP280::SAMPLING_X2,     /* Temp. oversampling */
+                  Adafruit_BMP280::SAMPLING_X16,    /* Pressure oversampling */
+                  Adafruit_BMP280::FILTER_X16,      /* Filtering. */
+                  Adafruit_BMP280::STANDBY_MS_500); /* Standby time. */  
+
+  dosya = SD.open("test.txt");
+  if (dosya)
+  {
+  	Serial.println("Dosyada veri bulundu!");
+  	while (dosya.available()) 
+  	{
+      Serial.write(dosya.read());
+      veri += dosya.read();
+  	}
+  	yazirmaYapildi = false;
+  }
+  dosya.close();
+ 
+  else
+  {
+ 	ilkBasinc = BMPSensor.readPressure() / 100; 
+  	dosya = SD.open("test.txt", FILE_WRITE);
+  	Serial.println("Dosyada veri bulunamadi, dosyaya veri yazdiriliyor!");
+  	Serial.print("Yazdirilan Basinc: "); Serial.println(ilkBasinc);
+  	dosya.println(ilkBasinc);
+  	dosya.close();
+  	yazirmaYapildi = true;
+  }
+}
+
+void loop() 
+{
+	if (yazirmaYapildi)
+	{
+		dosya = SD.open("test.txt");
+		Serial.print("Okunan Veri: ");
+		while (dosya.available()) 
+  		{
+      		veri += dosya.read();
+  		}
+  		Serial.println(" ");
+	}
+
+	Serial.print("Okunan Veri: "); Serial.println(veri);
+}
