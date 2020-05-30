@@ -43,8 +43,9 @@ void setup()
   	while (dosya.available()) 
     {
       Serial.write(dosya.read());
-      Serial.println("");   
+      veri += dosya.read();
     }
+    Serial.print("Okunan Veri: "); Serial.println(veri);
   }
  
   else
@@ -61,7 +62,7 @@ void setup()
 
 void loop() 
 {
-  dosya = SD.open("test.txt");
+ /* dosya = SD.open("test.txt");
   if (dosya)
   {
   	Serial.println("Okunan Veri:");
@@ -77,5 +78,5 @@ void loop()
 
  	Serial.println(""); Serial.println("");
   	dosya.close();
-  }
+  }*/
 }
