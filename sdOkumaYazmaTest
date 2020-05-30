@@ -9,7 +9,7 @@ Adafruit_BMP280 BMPSensor;
 float ilkBasinc = 50; 
 const int chipSelect = 53; 
 String veri = "";
-bool yazirmaYapildi = false;
+bool yazdirmaYapildi = false;
 
 void setup() 
 {
@@ -68,14 +68,15 @@ void loop()
 	if (yazdirmaYapildi)
 	{
 		dosya = SD.open("test.txt");
-		Serial.print("Okunan Veri: ");
+		Serial.print("Okunan Veri (Anlik): ");
 		while (dosya.available()) 
   		{
+  			Serial.print(dosya.read());
       		veri += dosya.read();
   		}
   		Serial.println(" ");
+  		Serial.print("Okunan Veri: "); Serial.println(veri);
+  		Serial.println(" ");
   		yazdirmaYapildi = false;
-	}
-
-	Serial.print("Okunan Veri: "); Serial.println(veri);
+	}	
 }
