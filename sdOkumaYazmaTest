@@ -80,3 +80,36 @@ void loop()
   	dosya.close();
   }*/
 }
+
+String readFile(String filename, int line)
+{
+char s[20];
+char FileName[sizeof(filename)];
+filename.toCharArray(FileName, sizeof(FileName));
+
+File myFile = SD.open(FileName,FILE_READ);
+if(myFile)
+{
+String recived = "";
+int cur = 0;
+char ch;
+while (myFile.available())
+{
+ch = myFile.read();
+if(ch == ',')
+{
+cur++;
+if(cur == line)
+{
+myFile.close();
+return String(recived);
+}
+}
+else
+{
+recived += ch;
+}
+}
+}
+return "";
+}
