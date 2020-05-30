@@ -43,7 +43,7 @@ void setup()
   	while (dosya.available()) 
     {
       Serial.write(dosya.read());
-      veri += dosya.read();
+      veri = readFile("test.txt", 0);
     }
     Serial.print("Okunan Veri: "); Serial.println(veri);
   }
